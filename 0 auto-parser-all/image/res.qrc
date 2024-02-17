@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="image">
+    <file>loading.gif</file>
+    <file>live.png</file>
+    <file>background2.png</file>
+    <file>lolo.png</file>
+    <file>wrape.png</file>
+    <file>64234.png</file>
+    <file>55345345.png</file>
+    <file>4324234.png</file>
+    <file>123123.png</file>
+    <file>6565656.png</file>
+    <file>aaa.png</file>
+  </qresource>
+</RCC>
