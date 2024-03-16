@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
 from threading import Thread, Event
 import time
-import threading
 import requests
+from collections import defaultdict
 from uuid import uuid4
 from collections import deque
 
@@ -13,21 +13,19 @@ app = Flask(__name__)
 
 last_message  = None
 old_ids = deque(maxlen=100)  # Ограничиваем размер для избежания утечки памяти
-
-        
-random_message_text = 'Запуск рандомного сообщения.'
+messages_by_ip = defaultdict(lambda: None)  # Словарь для отслеживания сообщений по IP
+ 
 stop_event = Event()
 
 def add_random_message():
     global last_message
     while not stop_event.is_set():
         message_id = str(uuid4())
-        last_message  = ({'id': message_id, 'message': random_message_text})
+        last_message = {'id': message_id, 'message': 'Запуск рандомного сообщения.'}
         print("Добавлено рандомное сообщение.")
+        time.sleep(20)
+        last_message = None
         time.sleep(900)
-    else:
-        time.sleep(10)
-
 
 @app.route('/post_data', methods=['POST'])
 def post_data():
@@ -41,11 +39,13 @@ def post_data():
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
-    if last_message is not None:
+    client_ip = request.remote_addr
+    if last_message and messages_by_ip[client_ip] is not None:
         if last_message['id'] not in old_ids:
-            old_ids.append(last_message['id'])  # Добавляем ID в список уже обработанных
+            messages_by_ip[client_ip] = last_message['id']  # Добавляем ID в список уже обработанных
             return jsonify(last_message), 200
-    return jsonify({'message': ''}), 200
+        else:
+            return jsonify({'message': 'Сообщений нет или уже было получено.'}), 200
 
 
 @app.route('/shutdown', methods=['POST'])

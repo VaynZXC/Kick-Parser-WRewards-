@@ -1,7 +1,7 @@
 [
     {
         "domain": ".kick.com",
-        "expirationDate": 1707024292.005741,
+        "expirationDate": 1709574800.365064,
         "hostOnly": false,
         "httpOnly": true,
         "name": "__cf_bm",
@@ -10,12 +10,12 @@
         "secure": true,
         "session": false,
         "storeId": "0",
-        "value": "gN91p7CtWWJ1.HOomUkcrmpLhIKeJOd_yW9d8JzbTYM-1707022494-1-AX93Wmml7eDo2SQ64jBPQbDxOGYUFVDJfkG7iV0Bb2mFe3FVOD0WAlag0nDkgkeCfXvJcAxGOFmNCEUAYuBZovk=",
+        "value": "8hiIG8mz_qvT84bqL7leMVlDabV9wqprZqAQCipabuQ-1709573000-1.0.1.1-QHErKofHAD2ZDRn_WwZg9NZLGLJV4N6PJfMcicQBt6uO5q8KRTp5MJfjVEKuSHH63WhswscuKe2Ti6AoS93tKg",
         "id": 1
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1738558522,
+        "expirationDate": 1741107716,
         "hostOnly": false,
         "httpOnly": false,
         "name": "__stripe_mid",
@@ -24,12 +24,12 @@
         "secure": true,
         "session": false,
         "storeId": "0",
-        "value": "2454ac01-9859-4895-a928-3896803b4c6c745b78",
+        "value": "870dd77f-0301-40cf-a3b5-18aba71da0e2c67725",
         "id": 2
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1707024322,
+        "expirationDate": 1709573516,
         "hostOnly": false,
         "httpOnly": false,
         "name": "__stripe_sid",
@@ -38,12 +38,12 @@
         "secure": true,
         "session": false,
         "storeId": "0",
-        "value": "06a4ee2e-17f7-4d60-b9c6-1c45dcfccc1069c9f8",
+        "value": "4fafd60e-b8f3-4483-9db9-e95d4703533e14f5d6",
         "id": 3
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1714798512,
+        "expirationDate": 1717347708,
         "hostOnly": false,
         "httpOnly": false,
         "name": "_fbp",
@@ -52,12 +52,12 @@
         "secure": false,
         "session": false,
         "storeId": "0",
-        "value": "fb.1.1706379286102.1635835073",
+        "value": "fb.1.1709570760020.2108298537",
         "id": 4
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1741582509.491834,
+        "expirationDate": 1744131709.258162,
         "hostOnly": false,
         "httpOnly": false,
         "name": "_ga",
@@ -66,12 +66,12 @@
         "secure": false,
         "session": false,
         "storeId": "0",
-        "value": "GA1.1.1555774840.1705346989",
+        "value": "GA1.1.166530454.1709570758",
         "id": 5
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1741582509.695642,
+        "expirationDate": 1744131709.309169,
         "hostOnly": false,
         "httpOnly": false,
         "name": "_ga_JPX1B65FL2",
@@ -80,12 +80,12 @@
         "secure": false,
         "session": false,
         "storeId": "0",
-        "value": "GS1.1.1707022509.36.0.1707022509.60.0.0",
+        "value": "GS1.1.1709570758.1.1.1709571709.52.0.0",
         "id": 6
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1713122988,
+        "expirationDate": 1717346757,
         "hostOnly": false,
         "httpOnly": false,
         "name": "_gcl_au",
@@ -94,12 +94,12 @@
         "secure": false,
         "session": false,
         "storeId": "0",
-        "value": "1.1.1357283879.1705346988",
+        "value": "1.1.1744418978.1709570757",
         "id": 7
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1713123025,
+        "expirationDate": 1717346936,
         "hostOnly": false,
         "httpOnly": false,
         "name": "_rdt_uuid",
@@ -108,12 +108,12 @@
         "secure": true,
         "session": false,
         "storeId": "0",
-        "value": "1705346990775.f1eafb2f-f32d-445d-9713-5b9590640c02",
+        "value": "1709570919627.fb22f1c4-c753-4c92-9f83-cb71b2b3b0c0",
         "id": 8
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1738558505.847849,
+        "expirationDate": 1741106757.895105,
         "hostOnly": false,
         "httpOnly": true,
         "name": "cf_clearance",
@@ -122,12 +122,12 @@
         "secure": true,
         "session": false,
         "storeId": "0",
-        "value": "4GWaqKkY.tCtc99YeMByCr8wEh3BDZP2LFN1lAa3hB8-1707022508-1-AfsA1/Pzgko++h2X7QDAzFIiwsw6g//vJdaRyYeLcp7q3ZUMqABk64o55ZiOxvL0IPBM+Sf92qbn5Gj7h1kadY8=",
+        "value": "Hf.L5aVXKZpINqVR0N6LnzbBxOC3On.IwFm3j0VV1rU-1709570758-1.0.1.1-G4RUxkZeWCfTok10eBC8YAUd9GO5cP.W1MCcWSM2IIuPnOWOc45suS2zPdbptXaxvdMBHvIW7L7SFrsRx_75FQ",
         "id": 9
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1709614510.47174,
+        "expirationDate": 1712163710.050823,
         "hostOnly": false,
         "httpOnly": true,
         "name": "kick_session",
@@ -136,26 +136,26 @@
         "secure": false,
         "session": false,
         "storeId": "0",
-        "value": "eyJpdiI6IlhFajdKL0Y3NzZNei9QZ1NpNkZ2SUE9PSIsInZhbHVlIjoiREN2M1M4Z3hjTDNFVXFPNVE4NFBRcUdzSTloa0QxUHNUWHZ0dDgvcGlDcndZb2ZwYnpVT2l2eGIwNFNIdFQ4UE1TUjdQMG1rSDlmZWdaeDFRVVZWTVpPaWIxNjVVaHlDUkxwbUs5MjU1QnZtRmFHTk03OHlMcXBMRG1RS0ZrZEkiLCJtYWMiOiI2Njg2MjhkZGNhYjc0ZTY5MWZmMDhkMTM1NmZmMmU5M2U2OWNmYjBkMTZjNzAzMjE0N2I1NzBkZWM0NGNiMDIzIiwidGFnIjoiIn0%3D",
+        "value": "eyJpdiI6Ii9QOVNVNWVBWU1RMCs4U1VMS2hrRWc9PSIsInZhbHVlIjoiMWx6elRza1R1RlhhdTRpMS83MnhFdU5yOFBScnB5ZjEwVUJDYzVXbWVwNW40cVM2VEJRUWd1SUxwMWExUVpXNk1OOGJYYkVVZlNaY2FHU3cyWVhrU2ZZSmJTajdSUUtyV2NhTHFkNURYaGZMT2twUGVIOHJFUk5wL0VDaE5hNWEiLCJtYWMiOiI1NzU4NDVkZTQxYjk1Y2Q3MmZhNTU2MGE5MjY3OGY3MWNiZWIzMWY5NGIxYjViOTkyM2VjZDY5ZGViN2Y4OWE0IiwidGFnIjoiIn0%3D",
         "id": 10
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1709614510.471551,
+        "expirationDate": 1712163710.050676,
         "hostOnly": false,
         "httpOnly": true,
-        "name": "XmQje3XuJgR5jRzwWBMlYBmmXG6LqRGWzrH4zGGl",
+        "name": "QuHKPJXqATcui9D9xi0HIlzBiNOwUezhGt2xyOIx",
         "path": "/",
         "sameSite": "lax",
         "secure": false,
         "session": false,
         "storeId": "0",
-        "value": "eyJpdiI6ImhUTGMrMGxxRnlYd2NMRVAvbkxlcWc9PSIsInZhbHVlIjoidzAwbXhTbkhXTXBBcmRZZWNKd2EzS2lFemk4dUFvS21FYS80ZGtuYk9td3U1UnIxYkVneXFnZWlWeGUzNTFxTUt1czJhajRkYVo3NWNUcjhRdlhDVzVZZjVaOE1zdGFDay9pV1ZzYzB5cjVzelh2Z3NETVVRVCtSNi9pdFRkTWh4aVBhVkdFQzUvSFN5YUQ0UjVmN3V0enRCcjRBZndDVWErYmNzUDlkeTVSNHBVMVdhb2xQY0hDVzZQL3pySTAyWnZQYTlhdzdIRCt5Q25icUF1UU15a0lkVzlLWXB1d3NaZ3BRRGtnYStZWXB4Nyt5N3NWWTJONlhlSGVQN1ZmRmlCc0N4VjhocHEybytpNTRzV0VPNGd4SE1WMHRvL0F3MkFieGt4bG11bVFpOVdQc2tCWXd5MFpYNE1ZU1g3OEJEdTRaNnY2am5RTHgrTUs3MkdqbVpOM0tYUzVadVBiMkhqTmNYSndwdlUzWGR3akxKdXJaeEE4QlRrVS8raU03RXduUytwMGlMUHNmUllUU21VMVlJYnZyNG5Qai8zaWVHRkRVUkR1cWFmWDhQb3NEZ0lXWi9WWEY3RWc1bnc4elh3d3h5WW9rSERoc3V3M09aNXhQTHJWVkdjT2xTbER1YTV2L2JSY2lHUkhKN1Q4dnpnVnVBUWJGZ1MxOU43S1Z1c291K3NCOHFTbnVQbG1IYUY4bEhmZ1dYZ2VqVkc2OUYxWlQxZHhEYkdxZ2YvaHRWSmVobUMxRUV6aVJNN2NuSG9KSHJBbGhZdnMwNEZRNHYvMldmdUxXMk43UThiSmJzakhuQk1rNFVueXJyZk5TUmhITGxjMm5JeWhvSzR3aTlaeXYwMDJYbzhQSk0vT0tMeXdLenc9PSIsIm1hYyI6ImI4MDA1MDY4NDUxZDA0OWIwMDAxZmEzMjYyN2I4MzAwZjU1ODI2NWZkZGM4MGUzMGNiOTExMDBiYTkwNzM1YjEiLCJ0YWciOiIifQ%3D%3D",
+        "value": "eyJpdiI6IjhscTVOcWRzVVdaY3B3T2t5L0VqNlE9PSIsInZhbHVlIjoiUHR3ZWI4a1NvSEFYdkVENVFmNEMvMXBoMWZQS2QzUTF1U05oMkRLU0JLU0VxZkg0YXFIYzFhbEIvd0N0ZmFraEN4TjNtUHlhOGpmeDBvblAwRitkWXJZeHhvc3o3S3dZV1BuNjQ2c2hOUE5UYXAvTG1sblFyeXBVRGpHOVVZRWZiS2E0UkZMd0J0ZXJIQndwUVViQVBKK3FhYjQxdnBSOUJlMzVrbHk5aWxhRUxqVkl5eGEralpkZHErajRLWVJDK283TDcvZ2FIUDRPWTRFTk5VNm1iWmtJZzlycGtHWGU4eDVxdi96a054TWhJa204WlQyUUE0OTlQL0FXTmVLTWE4cTZ4YU1MRzNKeTVaMVNjWHBJNDBPSHAvK3BxZGtjZTRqTm83T2xaTWV2RVB4ajVPVXZLb25ocDF0NC9UYVBCbWpJSElJZURmWFhtdURsUnVReWpHQ2hUZVBsMW5HVDJBczBQQVNOVVZmc0U2eWNObVpMVk91Q1o1M2JFUitGV0dzbDVLbndyM3RxQldlYWsyRTFYMTQ4VmhMdC9GT21XVGxtVUg1NTBVVXk1VWhaQXVlcFkzazM0WHNGMHZpSGs1OU82MzYwMzJBdk1URUIxbGt6Z1Axam4rWXExazk1bUYxUDBxS002NW5Va0c0cko4T1hCaGt5WUF4Z2pHekZ4V2xtN0xGS3loYkNzcEpuWXNDVTgxTGhNaVM0ZGprWHhkNXZaYkpxeU1PcElpTjRHZGVJUktsSlBlYnFzdG4zYkIveUQ0SEtmVGZXKzFDRTZ6eW5YT01Md2Fwcjh6VEgrSG9xR3ZZWURib2Y3cGpkeHN3cnkyZ1RWb0lib0MzMWYwSmxkTU96eXN0N1c2d0VOcTEzdDV4U2xscnhoZ2hyYnh1OFN1RTQvZTQ9IiwibWFjIjoiMzE1NWVlOTBiNTBlNjk4YzZkMDg3MWM3OGRlZjRmOTQ1ZWQ1OGQ1MjA4MGRkODM2MGM4MzI2NGMxOTQxZjQzYyIsInRhZyI6IiJ9",
         "id": 11
     },
     {
         "domain": ".kick.com",
-        "expirationDate": 1709614510.471693,
+        "expirationDate": 1712163710.050783,
         "hostOnly": false,
         "httpOnly": false,
         "name": "XSRF-TOKEN",
@@ -164,12 +164,12 @@
         "secure": false,
         "session": false,
         "storeId": "0",
-        "value": "eyJpdiI6ImtOSkVRY3hmWTM5dWkwV2lQSnUvTVE9PSIsInZhbHVlIjoiaXYyYUhjZ2FGTGxBc2IyM3VzNUVvd1I2cjJZbDRYYWxwMmh6SG5pN2NhOElIWVpveS80eXUzSDkzUTIxQnNHajQ4ZmpxNUE4dW5keVRjd3Rtdk1WdnNlRGMvYjRXa2pZYkV1ZDNiVWFRR3MyQzhjWkJJYll6YjFDUXNHWUFCeWwiLCJtYWMiOiIyNDJkZWQwZDMyMWZjOTlkYmUzNjRjNmQxMDVmMTBlZTJkOGIxMWFjODEyZWJkMGJkMWNmNDZhZGZlN2MxYzgwIiwidGFnIjoiIn0%3D",
+        "value": "eyJpdiI6IjNaUlM1WnByRllHNk5RcWpwdDRsRnc9PSIsInZhbHVlIjoiaHpmZTBkWXNaeEIycW9BeGVvMjJ5L0NQZ2ZBckRWQkxkb2paVXBzQ3dadHV3T0pKZnhZN25EMzk0UXBnMlplOHVhbkIzRlMzSnV1OTNuQzY2ZDYwZUtoNjRieTJncjhNSkZaOWRodWpuUXJ3KzJVK0FBa1A1bWlLMEdwMDBpTVQiLCJtYWMiOiJhZThiMDAzMDRmNTUyZWZmNTg2ZWJkNDdiYzg4NzhmNmIyN2EwMzliODgwNmMyYTgzZWIyMTEwOGIxM2M1YTFlIiwidGFnIjoiIn0%3D",
         "id": 12
     },
     {
         "domain": "kick.com",
-        "expirationDate": 1707108904.395681,
+        "expirationDate": 1709658108.524788,
         "hostOnly": true,
         "httpOnly": true,
         "name": "KP_UIDz",
@@ -178,12 +178,12 @@
         "secure": false,
         "session": false,
         "storeId": "0",
-        "value": "07KquYl23eS8iYK7IvRFNEIqp5UuDEM81fD2GgSlRyC5B6tlxuy5NruQFWBLeuQNheknPnb58Jfdkx4d3YgKaXMyh8DVMvX1TCuAT9lEcnuGChfKfNcctfFyPYA90RZPko2KK37yCyumL4Ws7HodzsBX1bX5daV",
+        "value": "08tclnic6A9dgabUkx865ewPsq6BcuCsV9GJopYpNI1gpNFThGixrK7mHCBjSeSUlMmXvNVMa7YLl7ymTDM2v3wIOhGhP2Mcti7gIIeC7rWcwytnoqZNqemArMCNR5AOJQSmDGpKmxNvheKbQMhE9kbJORMjKti",
         "id": 13
     },
     {
         "domain": "kick.com",
-        "expirationDate": 1707108904.39551,
+        "expirationDate": 1709658108.524659,
         "hostOnly": true,
         "httpOnly": true,
         "name": "KP_UIDz-ssn",
@@ -192,7 +192,7 @@
         "secure": true,
         "session": false,
         "storeId": "0",
-        "value": "07KquYl23eS8iYK7IvRFNEIqp5UuDEM81fD2GgSlRyC5B6tlxuy5NruQFWBLeuQNheknPnb58Jfdkx4d3YgKaXMyh8DVMvX1TCuAT9lEcnuGChfKfNcctfFyPYA90RZPko2KK37yCyumL4Ws7HodzsBX1bX5daV",
+        "value": "08tclnic6A9dgabUkx865ewPsq6BcuCsV9GJopYpNI1gpNFThGixrK7mHCBjSeSUlMmXvNVMa7YLl7ymTDM2v3wIOhGhP2Mcti7gIIeC7rWcwytnoqZNqemArMCNR5AOJQSmDGpKmxNvheKbQMhE9kbJORMjKti",
         "id": 14
     }
     ]
