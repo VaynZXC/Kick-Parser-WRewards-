@@ -23,7 +23,6 @@ import os
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException, NoSuchElementException, InvalidSelectorException
 
 
-
 # ---> ALL ACCOUNTS <---
 
 
@@ -71,6 +70,8 @@ class DataFetcherThread(QThread):
         self.message_queue = Queue()
         self.chat_writers = chat_writers
         self.parser_started = False
+        
+        self.wg_messages_sent_count = 0  # Счетчик отправленных WG сообщений
 
         
     def run(self):
@@ -91,7 +92,6 @@ class DataFetcherThread(QThread):
                 else:
                     print(f'[DataFetcher]: Ошибка при получении данных с сервера')
                     
-
                 # Обработка сообщений из очереди
                 if not self.message_queue.empty():
                     message, _ = self.message_queue.get()
@@ -100,13 +100,13 @@ class DataFetcherThread(QThread):
                         split_message = message.split()
                         streamer = split_message[4]
                         if streamer.lower() == 'wrewards':
-                            streamer_name = 'sam'
+                            streamer_name = 'bro'
                         elif streamer.lower() == 'pkle':
                             streamer_name = 'pkle'
                         elif streamer.lower() == 'watchgamestv':
                             streamer_name = 'ibby'
                         elif streamer.lower() == 'hyuslive':
-                            streamer_name = 'hyus'
+                            streamer_name = 'bro'
                         print(message)
                         print(streamer)
                         self.stream_is_start_signal.emit(streamer)
@@ -114,15 +114,18 @@ class DataFetcherThread(QThread):
                     if self.parser_started == True:
                         if 'Раздача поинтов началась.' in message:
                             print(f'{[message_time]} Запуск WG сообщения...')
+                            self.wg_messages_sent = 0
                             for chat_writer in self.chat_writers:
                                 chat_writer.set_wg_active(True)
                                 chat_writer.send_message_signal.emit('WG')
-                                send_telegram_message(bot_token, chat_id, 'Запуск WG сообщения.')
+                                
                         elif 'Запуск рандомного сообщения.' in message:
                             print(f'{[message_time]} Запуск рандомного сообщения...')
                             for chat_writer in self.chat_writers:
-                                chat_writer.set_wg_active(False)
-                                chat_writer.send_message_signal.emit('random')
+                                if chat_writer.set_wg_active == False:
+                                    chat_writer.send_message_signal.emit('random')
+                                else:
+                                    continue
                         elif 'Стрим на канале' in message:
                             split_message = message.split()
                             streamer = split_message[3]
@@ -137,6 +140,17 @@ class DataFetcherThread(QThread):
                 time.sleep(10)  # Задержка перед следующим запросом
             except Exception as e:
                 print(e)
+
+    @pyqtSlot(str)
+    def on_wg_message_sent(self, account_name):
+        self.wg_messages_sent_count += 1
+        #print(f"Бот {account_name} отправил WG сообщение.")
+        if self.wg_messages_sent_count == len(self.chat_writers):
+            self.wg_messages_sent_count = 0  # Сброс счетчика
+            for writer in self.chat_writers:
+                writer.set_wg_active(False)  # Отключаем режим WG
+            print("Все WG сообщения отправлены.")
+        
         
     def stop(self):
         self.parser_started = False
@@ -145,6 +159,7 @@ class ChatWriterThread(QThread):
     loaded_signal = pyqtSignal()
     send_message_signal = pyqtSignal(str)
     wg_active = pyqtSignal(bool)
+    wg_message_sent_signal = pyqtSignal(str)
     
     def __init__(self, cookie_file_path, streamer=None, streamer_name=None, account_name='bot', parent=None):
         super(ChatWriterThread, self).__init__(parent)
@@ -168,7 +183,7 @@ class ChatWriterThread(QThread):
             
             print(self.streamer_name)
             
-            #site = f'https://kick.com/papagrifin'
+            #site = f'https://kick.com/Suzuraya1'
             site = f'https://kick.com/{self.streamer}'
             self.driver.get(site)
             print(f'Сайт прогружен. [{self.account_name}]')
@@ -254,8 +269,10 @@ class ChatWriterThread(QThread):
                         time.sleep(delay)
                     else:
                         return
-                delay = random.randint(2, 3)
-                time.sleep(delay)
+                if message == 'WG' and self.wg_active:   
+                    delay = random.randint(2, 3)
+                    time.sleep(delay)
+                    self.wg_message_sent_signal.emit(self.account_name)
                 self.chat_input.click()
                 self.chat_input.send_keys(message)
                 self.chat_input.send_keys(Keys.ENTER)
@@ -263,12 +280,14 @@ class ChatWriterThread(QThread):
             except Exception as e:
                 print(e)
                 print(f'Не удалось отправить сообщение. [{self.account_name}]')
+                send_telegram_message(bot_token, chat_id, f'Не удалось отправить сообщение с аккаута {self.account_name}')
         else:
             print(f'Chat input не инициализирован. [{self.account_name}]')
         
              
     def get_chromedriver(self, use_proxy=False, user_agent=None):
         chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
     
         if user_agent:
             chrome_options.add_argument(f'--user-agent={user_agent}')
@@ -301,6 +320,7 @@ class ChatWriterThread(QThread):
         
     def stop(self):
         self.is_running = False
+        self.driver.quit()
                 
 class ParserApp(QWidget, settings.Ui_MainWindow):
     new_message_signal = pyqtSignal(str)
@@ -319,7 +339,7 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
         
         self.sound_mixer = mixer
         self.sound_mixer.init()
-        
+
         self.label.setText('All accounts')
         
         self.stop_button.lower()
@@ -380,7 +400,8 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
         
         if self.selected_button_id == 1:
             self.streamer = 'wrewards'
-            self.streamer_name = 'maxim'
+            #self.streamer_name = 'sam'
+            self.streamer_name = 'bro'
         elif self.selected_button_id == 2:
             self.streamer = 'pkle'
             self.streamer_name = 'pkle'
@@ -389,7 +410,8 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
             self.streamer_name = 'ibby'
         elif self.selected_button_id == 4:
             self.streamer = 'hyuslive'
-            self.streamer_name = 'hyus'
+            #self.streamer_name = 'hyus'
+            self.streamer_name = 'bro'
         elif self.selected_button_id == 0:
             self.streamer = 'watchgamestv'
             self.streamer_name = 'ibby'
@@ -409,7 +431,7 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
         self.threads = []
         
         accounts_names = {
-            1: 'kichimy',
+            1: 'kishimy',
             2: 'lilping',
             3: 'silkin_bola',
             4: 'klizmavpopu',
@@ -419,13 +441,15 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
             8: 'hrushkasvinka',
             9: 'ebitessami',
             10: 'mimik',
-            11: 'kraynyayaplote',
         }  
-        if self.total_chat_writers <= 11:
+        if self.total_chat_writers <= 10:
             for i in range(1, self.total_chat_writers + 1):
                 cookie_file_path = f'cookies/cookies_{i}.json'
                 account_name = accounts_names.get(i)
                 thread = ChatWriterThread(cookie_file_path, self.streamer, self.streamer_name, account_name)
+                
+                thread.wg_message_sent_signal.connect(self.data_fetcher_thread.on_wg_message_sent)
+                
                 thread.loaded_signal.connect(self.on_chat_writer_loaded)
                 self.new_message_signal.connect(thread.send_message_on_kick)
                 thread.start()
@@ -483,6 +507,8 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
         
         self.stop_button.raise_()
         self.in_progress.raise_()
+        
+        self.data_fetcher_thread.parser_started == True
         
     def stop_parser_update_page(self):
         self.sound_mixer.music.load('sound/main.mp3')
