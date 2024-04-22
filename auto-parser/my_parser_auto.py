@@ -21,6 +21,7 @@ import telebot
 from queue import Queue
 import os
 from selenium.common.exceptions import StaleElementReferenceException, TimeoutException, NoSuchElementException, InvalidSelectorException
+import zipfile
 
 
 # ---> ALL ACCOUNTS <---
@@ -31,6 +32,63 @@ bot_token = '6807729782:AAEpu9XVa1EJDL1OSqrPvD6pE69XUulQWM4'
 chat_id = '-4129523904'
 bot_chat_id = '-4095876207'
 message = 'Привет, это тестовое сообщение от моего бота!'
+
+PROXY_HOST ='147.45.87.85'
+PROXY_PORT ='8000'
+PROXY_USER = 'LoSpoo'
+PROXY_PASS = 'a8mJ9q'
+
+manifest_json = """
+{
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "name": "Chrome Proxy",
+    "permissions": [
+        "proxy",
+        "tabs",
+        "unlimitedStorage",
+        "storage",
+        "<all_urls>",
+        "webRequest",
+        "webRequestBlocking"
+    ],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "minimum_chrome_version":"22.0.0"
+}
+"""
+
+background_js = """
+var config = {
+        mode: "fixed_servers",
+        rules: {
+        singleProxy: {
+            scheme: "http",
+            host: "%s",
+            port: parseInt(%s)
+        },
+        bypassList: ["localhost"]
+        }
+    };
+
+chrome.proxy.settings.set({value: config, scope: "regular"}, function() {});
+
+function callbackFn(details) {
+    return {
+        authCredentials: {
+            username: "%s",
+            password: "%s"
+        }
+    };
+}
+
+chrome.webRequest.onAuthRequired.addListener(
+            callbackFn,
+            {urls: ["<all_urls>"]},
+            ['blocking']
+);
+""" % (PROXY_HOST, PROXY_PORT, PROXY_USER, PROXY_PASS)
 
 
 def send_telegram_message(bot_token, chat_id, message):
@@ -44,19 +102,34 @@ def send_telegram_message(bot_token, chat_id, message):
 
 class MessageSenderThread(QThread):
     send_random_message_signal = pyqtSignal()
+    pochinka_event = pyqtSignal()
 
     def __init__(self, parent=None):  # 600 секунд = 10 минут
         super(MessageSenderThread, self).__init__(parent)
         self.is_running = True
+        self.pochinka_time = False
         
-
+        
     def run(self):
         print('MessageSenderThread начал свою работу')
         while self.is_running:
-            delay = random.randint(180, 360)
-            time.sleep(delay)
-            self.send_random_message_signal.emit()
-
+            if self.pochinka_time == False:
+                delay = random.randint(180, 360)
+                #delay = random.randint(120, 180)
+                time.sleep(delay)
+                self.send_random_message_signal.emit()
+            
+    @pyqtSlot()
+    def handle_pochinka(self):
+        self.pochinka_time = True
+        print('Началась починка, все рандомные сообщения остановлены на 3 минуты.')
+        time.sleep(120)
+        print('До запуска рандомных сообщений осталась 1 минута.')
+        time.sleep(50)
+        print('До запуска рандомных сообщений осталась 10 ceкунд.')
+        time.sleep(10)
+        self.pochinka_time = False
+        
     def stop(self):
         self.is_running = False
 
@@ -64,6 +137,7 @@ class DataFetcherThread(QThread):
     stream_is_start_signal = pyqtSignal(str)
     stream_is_over_signal = pyqtSignal(str)
     change_streamer_name_signal = pyqtSignal(str)
+    pochinka_signal = pyqtSignal()
     
     def __init__(self, chat_writers, parent=None):
         super(DataFetcherThread, self).__init__(parent)
@@ -81,7 +155,7 @@ class DataFetcherThread(QThread):
         while True:
             try:
                 # Проверка и добавление сообщений в очередь
-                response = requests.get('http://94.241.142.146:5000/get_data')
+                response = requests.get('http://188.225.86.91:5000/get_data')
                 if response.status_code == 200:
                     data = response.json()
                     message = data.get('message')
@@ -106,26 +180,23 @@ class DataFetcherThread(QThread):
                         elif streamer.lower() == 'watchgamestv':
                             streamer_name = 'ibby'
                         elif streamer.lower() == 'hyuslive':
-                            streamer_name = 'bro'
+                            streamer_name = 'hyus'
                         print(message)
                         print(streamer)
                         self.stream_is_start_signal.emit(streamer)
                         self.change_streamer_name_signal.emit(streamer_name)
                     if self.parser_started == True:
                         if 'Раздача поинтов началась.' in message:
-                            print(f'{[message_time]} Запуск WG сообщения...')
                             self.wg_messages_sent = 0
                             for chat_writer in self.chat_writers:
                                 chat_writer.set_wg_active(True)
                                 chat_writer.send_message_signal.emit('WG')
-                                
-                        elif 'Запуск рандомного сообщения.' in message:
-                            print(f'{[message_time]} Запуск рандомного сообщения...')
-                            for chat_writer in self.chat_writers:
-                                if chat_writer.set_wg_active == False:
-                                    chat_writer.send_message_signal.emit('random')
-                                else:
-                                    continue
+                            print(f'{[message_time]} Запуск WG сообщения...')
+                        if 'Починка' in message:
+                            self.pochinka_signal.emit()
+                            #for chat_writer in self.chat_writers:
+                                #chat_writer.send_message_signal.emit('pochinka')
+
                         elif 'Стрим на канале' in message:
                             split_message = message.split()
                             streamer = split_message[3]
@@ -173,10 +244,12 @@ class ChatWriterThread(QThread):
         self.send_message_signal.connect(self.send_message_on_kick)
         self.streamer_name = streamer_name
         self.wg_active = False
+        self.is_ready = False
         
 
     def run(self):            
         with self.get_chromedriver(
+            #use_proxy = True,
             user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 
         ) as self.driver:
             print(f'Окно браузера запущено. [{self.account_name}]')
@@ -185,10 +258,7 @@ class ChatWriterThread(QThread):
             
             #site = f'https://kick.com/Suzuraya1'
             site = f'https://kick.com/{self.streamer}'
-            self.driver.get(site)
-            print(f'Сайт прогружен. [{self.account_name}]')
-            
-            
+            self.driver.get(site) 
             try:
                 button2 = self.driver.find_element(By.XPATH, '//*[@id="app"]/span/div/div[3]/button[1]')
                 button2.click()
@@ -196,21 +266,54 @@ class ChatWriterThread(QThread):
                 print('Кнопки 1 не найдено.')
                 
             #Загрузка кук из файла
-            with open(self.cookie_file_path, 'r') as cookies_file:
-                cookies = json.load(cookies_file)
-                for cookie in cookies:
-                    if 'sameSite' in cookie and cookie['sameSite'] not in ['Strict', 'Lax', 'None']:
-                        cookie['sameSite'] = 'None'
-                    self.driver.add_cookie(cookie)
-                print(f'Подключены cookies. [{self.account_name}]')
-
-            self.driver.get(site)
-            print(f'Драйвер готов к работе. [{self.account_name}]')
+            self.add_cookies()
+            while self.is_ready == False:
+                status = self.check_cookies(site)
+                if status == True:
+                    self.is_ready = True
+                else:
+                    self.add_cookies()
+                    
+            time.sleep(3)
+            self.avatar_element.click()
+            time.sleep(3)
+            try:
+                menu_item = self.driver.find_element(By.XPATH, '//*[@id="headlessui-menu-items-4"]/div[1]/a')
+                if menu_item:   
+                    print(f'Открываю вторую вкладку. [{self.account_name}]')
+                    url = menu_item.get_attribute('href')
+                    self.driver.execute_script("window.open(arguments[0]);", url)
+            except NoSuchElementException:
+                print(f'Вкладки "Канал" не найдено.')
+            
+            first_tab = self.driver.window_handles[0]
+            self.driver.switch_to.window(first_tab)
             self.loaded_signal.emit()  
             
             while self.is_running:
                 time.sleep(1)
+                
+
+
+    def check_cookies(self, site):
+        self.driver.get(site)
+        time.sleep(5)
+        try:
+            self.avatar_element = self.driver.find_element(By.XPATH, '//*[@id="headlessui-menu-button-3"]/div/img')
+            if self.avatar_element:
+                return True   
+        except NoSuchElementException:
+            print(f'Аватарка не найдна. [{self.account_name}]')
+            return False
         
+    def add_cookies(self):
+        with open(self.cookie_file_path, 'r') as cookies_file:
+            cookies = json.load(cookies_file)
+            for cookie in cookies:
+                if 'sameSite' in cookie and cookie['sameSite'] not in ['Strict', 'Lax', 'None']:
+                    cookie['sameSite'] = 'None'
+                self.driver.add_cookie(cookie)
+            print(f'Подключены cookies. [{self.account_name}]')
         
     @pyqtSlot(bool)
     def set_wg_active(self, state):
@@ -270,13 +373,22 @@ class ChatWriterThread(QThread):
                     else:
                         return
                 if message == 'WG' and self.wg_active:   
-                    delay = random.randint(2, 3)
+                    #print(f'[ТЕСТ] Точка пройдена...')
+                    delay = random.randint(1, 2)
                     time.sleep(delay)
-                    self.wg_message_sent_signal.emit(self.account_name)
+                # if message == 'pochinka':   
+                #     message = '!join'
+                #     delay = random.randint(2, 3)
+                #     time.sleep(delay)
+                    
                 self.chat_input.click()
                 self.chat_input.send_keys(message)
                 self.chat_input.send_keys(Keys.ENTER)
+                
                 print(f'С аккаунта {self.account_name} отправлено сообщение - {message}')
+                if message == 'WG' and self.wg_active:   
+                    self.wg_message_sent_signal.emit(self.account_name)
+                    
             except Exception as e:
                 print(e)
                 print(f'Не удалось отправить сообщение. [{self.account_name}]')
@@ -292,6 +404,15 @@ class ChatWriterThread(QThread):
         if user_agent:
             chrome_options.add_argument(f'--user-agent={user_agent}')
 
+        if use_proxy:      
+            plugin_file = 'proxy_auth_plugin.zip'
+
+            with zipfile.ZipFile(plugin_file, 'w') as zp:
+                zp.writestr('manifest.json', manifest_json)
+                zp.writestr('background.js', background_js)
+
+            chrome_options.add_extension(plugin_file)
+
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_argument('--ignore-certificate-errors')
         chrome_options.add_argument("--disable-proxy-certificate-handler")
@@ -303,7 +424,7 @@ class ChatWriterThread(QThread):
 
         s = Service(executable_path='chromdriver/chromedriver.exe')
 
-        driver = webdriver.Chrome(service= s, options=chrome_options)
+        driver = webdriver.Chrome(options=chrome_options)
         
         driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
             'source': '''
@@ -390,6 +511,7 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
         
         self.random_message_sender_thread = MessageSenderThread()
         self.random_message_sender_thread.send_random_message_signal.connect(self.send_random_message_to_all_accounts)
+        self.data_fetcher_thread.pochinka_signal.connect(self.random_message_sender_thread.handle_pochinka)
  
     def login_button_act(self):
         self.sound_mixer.music.load('sound/main.mp3')
@@ -410,8 +532,8 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
             self.streamer_name = 'ibby'
         elif self.selected_button_id == 4:
             self.streamer = 'hyuslive'
-            #self.streamer_name = 'hyus'
-            self.streamer_name = 'bro'
+            self.streamer_name = 'hyus'
+            #self.streamer_name = 'bro'
         elif self.selected_button_id == 0:
             self.streamer = 'watchgamestv'
             self.streamer_name = 'ibby'
@@ -430,7 +552,7 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
     
         self.threads = []
         
-        accounts_names = {
+        self.accounts_names = {
             1: 'kishimy',
             2: 'lilping',
             3: 'silkin_bola',
@@ -445,7 +567,7 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
         if self.total_chat_writers <= 10:
             for i in range(1, self.total_chat_writers + 1):
                 cookie_file_path = f'cookies/cookies_{i}.json'
-                account_name = accounts_names.get(i)
+                account_name = self.accounts_names.get(i)
                 thread = ChatWriterThread(cookie_file_path, self.streamer, self.streamer_name, account_name)
                 
                 thread.wg_message_sent_signal.connect(self.data_fetcher_thread.on_wg_message_sent)
@@ -543,7 +665,10 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
 
     def start_message_sender(self):
         self.random_message_sender_thread.start()
-
+        
+    def send_accounts_data(self):
+        pass
+        
     def stop_message_sender(self):
         print('message_sender_thread приостановил свою работу')
         self.random_message_sender_thread.stop()

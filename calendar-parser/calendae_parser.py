@@ -69,9 +69,11 @@ class ChatWriterThread(QThread):
                     if 'sameSite' in cookie and cookie['sameSite'] not in ['Strict', 'Lax', 'None']:
                         cookie['sameSite'] = 'None'
                     self.driver.add_cookie(cookie)
-                #print(f'Подключены cookies. [{self.account_name}]')
+                print(f'Подключены cookies. [{self.account_name}]')
             
-            #time.sleep(1)
+            time.sleep(1)
+            self.driver.get(site1)
+            time.sleep(3)
             self.driver.execute_script("window.open('');")
 
             second_tab = self.driver.window_handles[1]
@@ -81,31 +83,37 @@ class ChatWriterThread(QThread):
             
             # Логинимся в аккаунт
             try:
-                button = self.driver.find_element(By.XPATH, '//*[@id="Header"]/section/div[3]/a')
+                button = self.driver.find_element(By.XPATH, '//*[@id="__next"]/div/div[1]/div[1]/div[3]/a')
                 button.click()
-                #print("Кнопка login успешно нажата.")
             except NoSuchElementException:
                 print('Кнопки login не найдено.')
                 self.not_find_element += 1
             try:
-                button = self.driver.find_element(By.XPATH, '//*[@id="chakra-modal--body-:R2kcnm6:"]/div/form/div[7]/a')
+                button = self.driver.find_element(By.XPATH, '//*[@id="chakra-modal--body-:Rahium6:"]/div/form/div[7]/a')
                 button.click()
-                #print("Кнопка login2 успешно нажата.")
             except NoSuchElementException:
                 print('Кнопки login2 не найдено.')
                 self.not_find_element += 1
             time.sleep(3)
             
             # Переходим в вкладку календарь
-            try:
-                button = self.driver.find_element(By.XPATH, '//*[@id="Header"]/section/ul/li[8]/a')
-                button.click()
-                #print("Кнопка calendar успешно нажата.")
-            except NoSuchElementException:
-                print('Кнопки calendar не найдено.')
-                self.not_find_element += 1
-            time.sleep(3)
+            self.driver.get(site2)
+
+            # time.sleep(5)  
+            # try:
+            #     video_element = self.driver.find_element(By.XPATH, '//*[@id="__next"]/div/div[7]')
+            #     if video_element:
+            #         print(f'Окно в углу найдено.')
+            # except NoSuchElementException:
+            #     print('Окна в углу не найдено.')
+            # try:
+            #     close_btn = self.driver.find_element(By.XPATH, '//*[@id="__next"]/div/div[7]/div/div/button[2]')
+            #     close_btn.click()
+            #     print(f'Окно в углу закрыто.')
+            # except NoSuchElementException:
+            #     print('Окна в углу не найдено.')
                 
+            time.sleep(5)
             # Находим элемент в календаре
             try:
                 element = self.driver.find_element(By.CLASS_NAME, "react-flip-card")
@@ -117,11 +125,28 @@ class ChatWriterThread(QThread):
                 print('Карточки с наградой не найдено.')
                 send_telegram_message(bot_token, chat_id, f'Аккаунт {self.account_name} уже забрал бонус дня.')
                 
+            time.sleep(5)
+            # Находим элемент с количеством поинтов на аккаунте
+            try:
+                element1 = self.driver.find_element(By.XPATH, '//*[@id="menu-button-:rk:"]/span/div[2]')
+                element1.click()
+                time.sleep(1)
+                element2 = self.driver.find_element(By.XPATH, '//*[@id="menu-list-:r2:"]/div[2]/div[1]/div/div')
+                points = element2.text
+                
+                print(f'На аккануте {self.account_name} сейчас {points} поинтов.')
+                
+                current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                with open('points.txt', 'a') as file:
+                    # Записываем информацию. Можно добавить дату/время, если требуется.
+                    file.write(f'{current_time}: {self.account_name} - {points} points.\n') 
+            except NoSuchElementException:
+                print('Поинты не найдены.')
             
             if self.not_find_element == 0:
                 pass
             else:
-                print(f'Во время вредя работы {self.account_name} не был найден один из элементов.')
+                print(f'Во время работы {self.account_name} не был найден один из элементов.')
                 send_telegram_message(bot_token, chat_id, f'Во время вредя работы {self.account_name} не был найден один из элементов.')
                 
             time.sleep(3)
@@ -266,6 +291,8 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
             26: 'GreenSupport',
             27: 'OlejaZadrot',
             28: 'Tehniccc',
+            29: '6kTitan',
+            30: 'fastrapira',
         }  
         
         for i in range(1, self.total_chat_writers + 1):
@@ -307,6 +334,10 @@ class ParserApp(QWidget, settings.Ui_MainWindow):
         self.stop_button.raise_()
         self.in_progress.raise_()
         
+        with open('points.txt', 'a') as file:
+            # Записываем информацию. Можно добавить дату/время.
+            current_time = datetime.datetime.now().strftime('%Y-%m-%d')
+            file.write(f'Статистика по аккаунтам за {current_time}.\n')
         
     def stop_parser_update_page(self):
         self.sound_mixer.music.load('sound/main.mp3')
